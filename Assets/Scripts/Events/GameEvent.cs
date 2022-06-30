@@ -25,14 +25,6 @@ namespace Events
             }
         }
 
-        public void RaiseFloat(float raisedFloat)
-        {
-            for (var i = listeners.Count - 1; i >= 0; i--)
-            {
-                listeners[i].OnEventRaisedFloat(raisedFloat);
-            }
-        }
-
         public void RaisePowerType(PowerType powerType, float powerAmount)
         {
             for (var i = listeners.Count - 1; i >= 0; i--)

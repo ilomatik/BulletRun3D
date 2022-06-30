@@ -9,7 +9,6 @@ namespace Events
         public GameEvent Event;
         public UnityEvent Response;
         public UnityEvent<SpecialPower> ResponseSpecialPower;
-        public UnityEvent<float> ResponseFloat;
         public UnityEvent<PowerType, float> ResponsePowerValues;
 
         private void OnEnable()
@@ -30,11 +29,6 @@ namespace Events
         public void OnEventRaisedSpecialPower(SpecialPower responseSpecialPower)
         {
             ResponseSpecialPower.Invoke(responseSpecialPower);
-        }
-
-        public void OnEventRaisedFloat(float responseFloat)
-        {
-            ResponseFloat.Invoke(responseFloat);
         }
 
         public void OnEventRaisedPowerValues(PowerType powerType, float powerAmount)

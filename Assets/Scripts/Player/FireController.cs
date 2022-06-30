@@ -137,7 +137,7 @@ namespace Player
             }
         }
 
-        public void SetStartStats()
+        private void SetStartStats()
         {
             fireType = defaultFireType;
             fireRate = defaultFireRate;
