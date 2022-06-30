@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Power;
 using UnityEngine;
 
 namespace Events
@@ -13,6 +14,30 @@ namespace Events
             for (var i = listeners.Count - 1; i >= 0; i--)
             {
                 listeners[i].OnEventRaised();
+            }
+        }
+
+        public void RaiseSpecialPower(SpecialPower raisedSpecialPower)
+        {
+            for (var i = listeners.Count - 1; i >= 0; i--)
+            {
+                listeners[i].OnEventRaisedSpecialPower(raisedSpecialPower);
+            }
+        }
+
+        public void RaiseFloat(float raisedFloat)
+        {
+            for (var i = listeners.Count - 1; i >= 0; i--)
+            {
+                listeners[i].OnEventRaisedFloat(raisedFloat);
+            }
+        }
+
+        public void RaisePowerType(PowerType powerType, float powerAmount)
+        {
+            for (var i = listeners.Count - 1; i >= 0; i--)
+            {
+                listeners[i].OnEventRaisedPowerValues(powerType, powerAmount);
             }
         }
 

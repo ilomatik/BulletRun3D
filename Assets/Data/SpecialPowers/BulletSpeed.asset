@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71197a43f1b430542b0176ba0c985a2b, type: 3}
   m_Name: BulletSpeed
   m_EditorClassIdentifier: 
+  onSpecialPowerActive: {fileID: 11400000, guid: c64c7160ae9f0fe4abe12800e22dd3d5, type: 2}
+  onSpecialPowerDeActive: {fileID: 11400000, guid: c2bcbca0a144a78419f65930fd583db6, type: 2}
   description: Increase Bullet Speed
-  powers: 3
-  amount: 50
+  powerType: 3
+  amount: 1.5
   inUse: 0

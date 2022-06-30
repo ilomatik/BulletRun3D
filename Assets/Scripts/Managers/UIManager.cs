@@ -1,17 +1,22 @@
+using Events;
 using UnityEngine;
 
 namespace Managers
 {
     public class UIManager : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        [Header("Events")] 
+        [SerializeField] private GameEvent onGameStartButtonClick;
+        [SerializeField] private GameEvent onGameStopButtonClick;
+
+        public void GameStopButtonClick()
         {
+            onGameStopButtonClick.Raise();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void GameStartButtonClick()
         {
+            onGameStartButtonClick.Raise();
         }
     }
 }

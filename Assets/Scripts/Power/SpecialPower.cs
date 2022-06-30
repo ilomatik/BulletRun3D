@@ -1,9 +1,10 @@
 using System;
+using Events;
 using UnityEngine;
 
 namespace Power
 {
-    public enum Powers
+    public enum PowerType
     {
         TripleAngleFire,
         DoubleFire,
@@ -15,46 +16,38 @@ namespace Power
     [CreateAssetMenu(fileName = "Special Power", menuName = "Player Power/Special Power")]
     public class SpecialPower : ScriptableObject
     {
+        public GameEvent onSpecialPowerActive;
+        public GameEvent onSpecialPowerDeActive;
         public string description;
-        public Powers powers;
+        public PowerType powerType;
         public float amount;
         public bool inUse;
 
+        private void OnEnable()
+        {
+            inUse = false;
+        }
+
         public void UsePower()
         {
-            Debug.Log("UsePower is working");
             inUse = true;
             ActivePower();
         }
 
         public void UnusePower()
         {
-            Debug.Log("UnusePower is working");
             inUse = false;
+            DeActivePower();
         }
 
         private void ActivePower()
         {
-            switch (powers)
-            {
-                case Powers.TripleAngleFire:
-                    // side bullets move with 'amount' degree angle
-                    break;
-                case Powers.DoubleFire:
-                    // fires double bullet in 'amount' seconds
-                    break;
-                case Powers.IncreaseFireRate:
-                    // fire rate will be 'amount' second
-                    break;
-                case Powers.BulletSpeed:
-                    // increase bullet speed 'amount' percent 
-                    break;
-                case Powers.PlayerSpeed:
-                    // player speed *= 'amount'
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            onSpecialPowerActive.RaisePowerType(powerType, amount);
+        }
+        
+        private void DeActivePower()
+        {
+            onSpecialPowerDeActive.RaisePowerType(powerType, amount);
         }
     }
 }

@@ -1,21 +1,19 @@
-using Player;
+using Events;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private PlayerBehaviour player;
-    [SerializeField] private InputHandler inputHandler;
+    [Header("Events")] 
+    [SerializeField] private GameEvent onGameStart;
+    [SerializeField] private GameEvent onGameEnd;
     
     public void GameStart()
     {
-        inputHandler.gameObject.SetActive(true);
-        player.ControlActivate();
+        onGameStart.Raise();
     }
 
     public void GameEnd()
     {
-        player.ControlDeActivate();
-        inputHandler.gameObject.SetActive(false);
-        player.StopMovementDirectly();
+        onGameEnd.Raise();
     }
 }

@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 1679399672152202221}
   - component: {fileID: 1679399672152202220}
   - component: {fileID: 1679399672152202223}
+  - component: {fileID: 4815527139448803927}
   m_Layer: 5
   m_Name: SpecialPowerButton
   m_TagString: Untagged
@@ -257,8 +258,32 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1679399672152202223}
-        m_TargetAssemblyTypeName: SpecialPowerButton, Assembly-CSharp
-        m_MethodName: OnClick
+        m_TargetAssemblyTypeName: Power.SpecialPowerButton, Assembly-CSharp
+        m_MethodName: MoveButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1679399672152202223}
+        m_TargetAssemblyTypeName: Power.SpecialPowerButton, Assembly-CSharp
+        m_MethodName: SetPowerUsage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1679399672152202223}
+        m_TargetAssemblyTypeName: Power.SpecialPowerButton, Assembly-CSharp
+        m_MethodName: InvokeOnClickEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -280,11 +305,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 447ca21dbcd92254d8a5bb1bb020d6d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveableObjectTransform: {fileID: 1679399672152202222}
+  onSpecialPowerButtonAdd: {fileID: 11400000, guid: 2a8e2e687a317f44db3d9946880524c9, type: 2}
+  onSpecialPowerButtonRemove: {fileID: 11400000, guid: ce96bdb4d0f5e3242981f98f4b93dff0, type: 2}
   buttonText: {fileID: 1679399671734103675}
   moveHeight: 75
   moveDuration: 1
   specialPower: {fileID: 0}
+--- !u!114 &4815527139448803927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679399672152202217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9447f8905e369459609c6dc80cca8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: d3794ecd3d258cc45858a2f406e85123, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls: []
+  ResponseSpecialPower:
+    m_PersistentCalls:
+      m_Calls: []
+  ResponseFloat:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1679399672152202223}
+        m_TargetAssemblyTypeName: Power.SpecialPowerButton, Assembly-CSharp
+        m_MethodName: SetButtonInteractable
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1679399673548019175
 GameObject:
   m_ObjectHideFlags: 0

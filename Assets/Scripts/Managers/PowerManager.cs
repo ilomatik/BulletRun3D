@@ -7,32 +7,19 @@ namespace Managers
 {
     public class PowerManager : MonoBehaviour
     {
+        [SerializeField] private DefaultStatsHolder defaultStats;
+        
         private List<SpecialPower> inUseSpecialPowers = new List<SpecialPower>();
-
-        public static Action<SpecialPower> OnSpecialPowerSelect;
-        public static Action<SpecialPower> OnSpecialPowerUnselect;
         public static Action<bool> OnSpecialPowerListCountChange;
 
-        private void Awake()
-        {
-            OnSpecialPowerSelect += AddSpecialPowerInUseList;
-            OnSpecialPowerUnselect += RemoveSpecialPowerInUseList;
-        }
-
-        private void OnDestroy()
-        {
-            OnSpecialPowerSelect += AddSpecialPowerInUseList;
-            OnSpecialPowerUnselect += RemoveSpecialPowerInUseList;
-        }
-
-        private void AddSpecialPowerInUseList(SpecialPower addedSpecialPower)
+        public void AddSpecialPowerInUseList(SpecialPower addedSpecialPower)
         {
             inUseSpecialPowers.Add(addedSpecialPower);
             
             OnSpecialPowerListCountChange?.Invoke(inUseSpecialPowers.Count < 3);
         }
 
-        private void RemoveSpecialPowerInUseList(SpecialPower removedSpecialPower)
+        public void RemoveSpecialPowerInUseList(SpecialPower removedSpecialPower)
         {
             inUseSpecialPowers.Remove(removedSpecialPower);
             

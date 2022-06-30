@@ -1,55 +1,80 @@
-using DG.Tweening;
+using Events;
 using Managers;
-using Power;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpecialPowerButton : MonoBehaviour
+namespace Power
 {
-    [Header("Components")] 
-    [SerializeField] private Transform moveableObjectTransform;
-    [SerializeField] private TextMeshProUGUI buttonText;
-    
-    [Header("Variables")]
-    [SerializeField] private float moveHeight;
-    [SerializeField] private float moveDuration;
-    [SerializeField] private SpecialPower specialPower;
-    
-    private Button button;
-
-    private void Awake()
+    public class SpecialPowerButton : MonoBehaviour
     {
-        button = GetComponent<Button>();
-        buttonText.text = specialPower.description;
-        PowerManager.OnSpecialPowerListCountChange += SetButtonInteractable;
-    }
+        [Header("Events")] 
+        [SerializeField] private GameEvent onSpecialPowerButtonAdd;
+        [SerializeField] private GameEvent onSpecialPowerButtonRemove;
 
-    private void OnDestroy()
-    {
-        PowerManager.OnSpecialPowerListCountChange -= SetButtonInteractable;
-    }
+        [Header("Components")] 
+        [SerializeField] private TextMeshProUGUI buttonText;
 
-    public void OnClick()
-    {
-        if (specialPower.inUse)
+        [Header("Variables")] 
+        [SerializeField] private float moveHeight;
+        [SerializeField] private float moveDuration;
+        [SerializeField] private SpecialPower specialPower;
+
+        private Button button;
+
+        private void Awake()
         {
-            moveableObjectTransform.DOLocalMoveY(0f, moveDuration);
-            specialPower.UnusePower();
-            PowerManager.OnSpecialPowerUnselect?.Invoke(specialPower);
+            button = GetComponent<Button>();
+            buttonText.text = specialPower.description;
+            PowerManager.OnSpecialPowerListCountChange += SetButtonInteractable;
         }
-        else
+
+        private void OnDestroy()
         {
-            moveableObjectTransform.DOLocalMoveY(moveHeight, moveDuration);
-            specialPower.UsePower();
-            PowerManager.OnSpecialPowerSelect?.Invoke(specialPower);
+            PowerManager.OnSpecialPowerListCountChange -= SetButtonInteractable;
         }
-    }
 
-    private void SetButtonInteractable(bool isInteractable)
-    {
-        if (specialPower.inUse) return;
+        public void InvokeOnClickEvent()
+        {
+            if (specialPower.inUse)
+            {
+                onSpecialPowerButtonAdd.RaiseSpecialPower(specialPower);
+            }
+            else
+            {
+                onSpecialPowerButtonRemove.RaiseSpecialPower(specialPower);
+            }
+        }
 
-        button.interactable = isInteractable;
+        public void MoveButton()
+        {
+            if (specialPower.inUse)
+            {
+                this.ToDown(0f, moveDuration);
+            }
+            else
+            {
+                this.ToUp(moveHeight, moveDuration);
+            }
+        }
+
+        public void SetPowerUsage()
+        {
+            if (specialPower.inUse)
+            {
+                specialPower.UnusePower();
+            }
+            else
+            {
+                specialPower.UsePower();
+            }
+        }
+
+        private void SetButtonInteractable(bool isInteractable)
+        {
+            if (specialPower.inUse) return;
+
+            button.interactable = isInteractable;
+        }
     }
 }

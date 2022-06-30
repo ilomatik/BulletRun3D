@@ -1,4 +1,6 @@
+using System;
 using DG.Tweening;
+using Power;
 using UnityEngine;
 
 namespace Player
@@ -11,10 +13,7 @@ namespace Player
             Center,
             Right
         }
-
-        [Header("Components")] 
-        [SerializeField] private Transform sideMovementTransform;
-
+        
         [Header("Variables")]
         [SerializeField] private float defaultForwardSpeed;
         [SerializeField] private float sideMovementDuration;
@@ -24,44 +23,124 @@ namespace Player
         [SerializeField] private float sideDistance;
 
         private float currentSpeed;
-        private Vector3 sideMovementTargetLocalPosition;
+        private bool isSideMoving;
+        private bool canMove;
+        private Vector2 firstTouchPosition;
 
-        public void MoveForwardStart()
+        private void Start()
         {
             currentSpeed = defaultForwardSpeed;
         }
 
-        public void MoveForwardStop()
+        private void Update()
         {
-            currentSpeed = 0;
+            if (!canMove) return;
+            
+#if UNITY_EDITOR
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                Debug.Log("Moving forward is working");
+                MoveForward();
+            }
+            
+            switch (!isSideMoving)
+            {
+                case true when Input.GetKey(KeyCode.A):
+                    MoveLeft();
+                    Debug.Log("Moving left is working");
+                    break;
+                case true when Input.GetKey(KeyCode.D):
+                    Debug.Log("Moving right is working");
+                    MoveRight();
+                    break;
+            }
+#else
+
+            if (Input.touchCount > 0)
+            {
+                MoveForward();
+                var touch = Input.GetTouch(0);
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    firstTouchPosition = touch.position;
+                }
+                else if (isSideMoving && touch.phase == TouchPhase.Moved)
+                {
+                    if (touch.position.x < firstTouchPosition.x)
+                    {
+                        MoveLeft();
+                    }
+                    else
+                    if (touch.position.x > firstTouchPosition.x)
+                    {
+                        MoveRight();
+                    }
+                }
+            }
+            
+#endif
         }
 
-        public void SetForwardSpeed(float newSpeed, bool setDefault = false)
+        public void SetForwardSpeedOnPowerActive(PowerType powerType, float newSpeed)
         {
-            currentSpeed = newSpeed;
-
-            if (setDefault)
+            if (powerType == PowerType.PlayerSpeed)
             {
-                defaultForwardSpeed = newSpeed;
+                currentSpeed *= newSpeed;
             }
         }
 
-        public void MoveRight()
+        public void SetForwardSpeedOnPowerDeActive(PowerType powerType, float newSpeed)
         {
-            if (currentSide == Side.Right) return;
-
-            sideMovementTargetLocalPosition = sideMovementTransform.localPosition;
-            sideMovementTargetLocalPosition.x += sideDistance;
-            sideMovementTransform.localPosition = sideMovementTargetLocalPosition;
+            if (powerType == PowerType.PlayerSpeed)
+            {
+                currentSpeed = defaultForwardSpeed;
+            }
         }
 
-        public void MoveLeft()
+        private void MoveForward()
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * defaultForwardSpeed);
+        }
+
+        private void MoveRight()
+        {
+            if (currentSide == Side.Right) return;
+            if (isSideMoving) return;
+
+            isSideMoving = true;
+            transform.DOMoveX(transform.localPosition.x + sideDistance, sideMovementDuration)
+                .OnComplete(() => isSideMoving = false);
+
+            currentSide = currentSide switch
+            {
+                Side.Center => Side.Right,
+                Side.Left => Side.Center,
+                _ => currentSide
+            };
+        }
+
+        private void MoveLeft()
         {
             if (currentSide == Side.Left) return;
+            if (isSideMoving) return;
 
-            sideMovementTargetLocalPosition = sideMovementTransform.localPosition;
-            sideMovementTargetLocalPosition.x -= sideDistance;
-            sideMovementTransform.localPosition = sideMovementTargetLocalPosition;
+            isSideMoving = true;
+            transform.DOMoveX(transform.localPosition.x - sideDistance, sideMovementDuration)
+                .OnComplete(() => isSideMoving = false);
+            
+            currentSide = currentSide switch
+            {
+                Side.Center => Side.Left,
+                Side.Right => Side.Center,
+                _ => currentSide
+            };
+        }
+
+        public void CanMove(bool value)
+        {
+            canMove = value;
         }
     }
 }
