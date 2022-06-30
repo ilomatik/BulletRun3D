@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Power;
 using UnityEngine;
@@ -40,7 +39,6 @@ namespace Player
 
             if (Input.GetKey(KeyCode.W))
             {
-                Debug.Log("Moving forward is working");
                 MoveForward();
             }
             
@@ -48,10 +46,8 @@ namespace Player
             {
                 case true when Input.GetKey(KeyCode.A):
                     MoveLeft();
-                    Debug.Log("Moving left is working");
                     break;
                 case true when Input.GetKey(KeyCode.D):
-                    Debug.Log("Moving right is working");
                     MoveRight();
                     break;
             }
@@ -101,7 +97,7 @@ namespace Player
 
         private void MoveForward()
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * defaultForwardSpeed);
+            transform.Translate(Vector3.forward * Time.deltaTime * currentSpeed);
         }
 
         private void MoveRight()
