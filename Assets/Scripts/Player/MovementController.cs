@@ -37,20 +37,25 @@ namespace Player
             
 #if UNITY_EDITOR
 
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetMouseButtonDown(0))
+            {
+                firstTouchPosition = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButton(0))
             {
                 MoveForward();
+
+                if (Input.mousePosition.x < firstTouchPosition.x - 50f)
+                {
+                    MoveLeft();
+                }
+                else if (Input.mousePosition.x > firstTouchPosition.x + 50f)
+                {
+                    MoveRight();
+                }
             }
             
-            switch (!isSideMoving)
-            {
-                case true when Input.GetKey(KeyCode.A):
-                    MoveLeft();
-                    break;
-                case true when Input.GetKey(KeyCode.D):
-                    MoveRight();
-                    break;
-            }
 #else
 
             if (Input.touchCount > 0)
