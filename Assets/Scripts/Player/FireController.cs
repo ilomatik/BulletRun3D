@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Managers;
 using Power;
 using UnityEngine;
 
@@ -11,20 +12,23 @@ namespace Player
         Default,
         Triple
     }
-    
+
     public class FireController : MonoBehaviour
     {
-        [Header("Components")] 
-        [SerializeField] private Bullet.Bullet bullet;
+        [Header("Components")] [SerializeField]
+        private Bullet.Bullet bullet;
+
         [SerializeField] private List<Transform> firePositions;
 
-        [Header("Default Variables")]
-        [SerializeField] private FireType defaultFireType;
+        [Header("Default Variables")] [SerializeField]
+        private FireType defaultFireType;
+
         [SerializeField] private bool defaultIsDoubleFire;
         [SerializeField] private float defaultFireRate;
         [SerializeField] private float defaultBulletSpeed;
-        [Tooltip("Wait duration between consecutive bullet fire")]
-        [SerializeField] private float defaultOnDoubleFireWaitDuration;
+
+        [Tooltip("Wait duration between consecutive bullet fire")] [SerializeField]
+        private float defaultOnDoubleFireWaitDuration;
 
         private FireType fireType;
         private bool isDoubleFire;
@@ -32,7 +36,7 @@ namespace Player
         private float bulletSpeed;
         private float onDoubleFireWaitDuration;
 
-        private void Start()
+        private void Awake()
         {
             SetStartStats();
         }
@@ -52,7 +56,7 @@ namespace Player
             while (true)
             {
                 yield return new WaitForSeconds(fireRate);
-                
+
                 if (!isDoubleFire)
                 {
                     FireAccordingToFireType();
@@ -62,7 +66,7 @@ namespace Player
                     for (var i = 0; i < 2; i++)
                     {
                         FireAccordingToFireType();
-                        
+
                         yield return new WaitForSeconds(onDoubleFireWaitDuration);
                     }
                 }
@@ -74,15 +78,20 @@ namespace Player
             switch (fireType)
             {
                 case FireType.Default:
-                    var spawnBullet = Instantiate(bullet, firePositions[0].position, firePositions[0].rotation);
+                    var spawnBullet = PoolManager.GetPoolObject();
+                    spawnBullet.transform.position = firePositions[0].position;
+                    spawnBullet.gameObject.SetActive(true);
                     spawnBullet.AddForceToBullet(Vector3.forward, bulletSpeed);
                     break;
                 case FireType.Triple:
                     foreach (var firePosition in firePositions)
                     {
-                        spawnBullet = Instantiate(bullet, firePosition.position, firePosition.rotation);
+                        spawnBullet = PoolManager.GetPoolObject();
+                        spawnBullet.transform.position = firePosition.position;
+                        spawnBullet.gameObject.SetActive(true);
                         spawnBullet.AddForceToBullet(Vector3.forward, bulletSpeed);
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -112,7 +121,7 @@ namespace Player
                     throw new ArgumentOutOfRangeException(nameof(powerType), powerType, null);
             }
         }
-        
+
         public void SetFireStatsOnPowerDeActive(PowerType powerType, float powerTypeAmount)
         {
             switch (powerType)

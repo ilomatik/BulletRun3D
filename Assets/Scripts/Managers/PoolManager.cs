@@ -1,30 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Managers
 {
-    public enum PoolType
-    {
-        Bullet
-    }
-
-    [Serializable]
-    public class PoolObject
-    {
-        public PoolType poolType;
-        public int poolAmount;
-        public GameObject objectToPool;
-        public Transform poolParent;
-        public List<GameObject> poolObjects;
-    }
-
     public class PoolManager : MonoBehaviour
     {
         #region Variables
 
-        [SerializeField] private List<PoolObject> poolObjects;
+        [SerializeField] private int poolAmount;
+        [SerializeField] private Bullet.Bullet objectToPool;
+        [SerializeField] private Transform poolParent;
+        
+        private static List<Bullet.Bullet> poolObjects = new List<Bullet.Bullet>();
 
         #endregion
 
@@ -41,21 +29,18 @@ namespace Managers
 
         private void CreatePools()
         {
-            foreach (var poolObject in poolObjects)
+            for (var i = 0; i < poolAmount; i++)
             {
-                for (var i = 0; i < poolObject.poolAmount; i++)
-                {
-                    var obj = Instantiate(poolObject.objectToPool, poolObject.poolParent);
-                    obj.SetActive(false);
-                    poolObject.poolObjects.Add(obj);
-                }
+                var obj = Instantiate(objectToPool, poolParent);
+                obj.gameObject.SetActive(false);
+                poolObjects.Add(obj);
             }
         }
 
-        public GameObject GetPoolObject(PoolType poolType)
+        public static Bullet.Bullet GetPoolObject()
         {
-            return poolObjects.Where(poolObject => poolObject.poolType == poolType)
-                .SelectMany(poolObject => poolObject.poolObjects.Where(poolObj => !poolObj.activeInHierarchy))
+            return poolObjects.SelectMany(poolObject =>
+                    poolObjects.Where(poolObj => !poolObj.gameObject.activeInHierarchy))
                 .FirstOrDefault();
         }
 
