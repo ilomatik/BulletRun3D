@@ -1,24 +1,11 @@
-using Events;
 using UnityEngine;
 
 namespace Power
 {
-    public enum PowerType
+    public abstract class SpecialPower : ScriptableObject
     {
-        TripleAngleFire,
-        DoubleFire,
-        IncreaseFireRate,
-        BulletSpeed,
-        PlayerSpeed
-    }
-    
-    [CreateAssetMenu(fileName = "Special Power", menuName = "Player Power/Special Power")]
-    public class SpecialPower : ScriptableObject
-    {
-        public GameEvent onSpecialPowerActive;
-        public GameEvent onSpecialPowerDeActive;
         public string description;
-        public PowerType powerType;
+        public float defaultAmount;
         public float amount;
         public bool inUse;
 
@@ -27,26 +14,8 @@ namespace Power
             inUse = false;
         }
 
-        public void UsePower()
-        {
-            inUse = true;
-            ActivePower();
-        }
+        public abstract void UsePower();
 
-        public void UnusePower()
-        {
-            inUse = false;
-            DeActivePower();
-        }
-
-        private void ActivePower()
-        {
-            onSpecialPowerActive.RaisePowerType(powerType, amount);
-        }
-        
-        private void DeActivePower()
-        {
-            onSpecialPowerDeActive.RaisePowerType(powerType, amount);
-        }
+        public abstract void UnusePower();
     }
 }

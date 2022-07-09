@@ -1,54 +1,44 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Managers;
-using Power;
 using UnityEngine;
 
 namespace Player
 {
-    public enum FireType
-    {
-        Default,
-        Triple
-    }
 
     public class FireController : MonoBehaviour
     {
-        [Header("Components")] [SerializeField]
-        private Bullet.Bullet bullet;
-
+        [Header("Components")] 
         [SerializeField] private List<Transform> firePositions;
 
-        [Header("Default Variables")] [SerializeField]
-        private FireType defaultFireType;
-
+        [Header("Default Variables")] 
         [SerializeField] private bool defaultIsDoubleFire;
         [SerializeField] private float defaultFireRate;
         [SerializeField] private float defaultBulletSpeed;
-
-        [Tooltip("Wait duration between consecutive bullet fire")] [SerializeField]
-        private float defaultOnDoubleFireWaitDuration;
-
-        private FireType fireType;
+        [Tooltip("Wait duration between consecutive bullet fire")]
+        [SerializeField] private float defaultOnDoubleFireWaitDuration;
+        
+        private bool isTripleAnglerFire;
         private bool isDoubleFire;
         private float fireRate;
         private float bulletSpeed;
         private float onDoubleFireWaitDuration;
+        private IEnumerator fireCoroutine;
 
         private void Awake()
         {
             SetStartStats();
+            fireCoroutine = Fire();
         }
 
         public void StartFire()
         {
-            StartCoroutine(Fire());
+            StartCoroutine(fireCoroutine);
         }
 
         public void StopFire()
         {
-            StopCoroutine(Fire());
+            StopCoroutine(fireCoroutine);
         }
 
         private IEnumerator Fire()
@@ -56,7 +46,7 @@ namespace Player
             while (true)
             {
                 yield return new WaitForSeconds(fireRate);
-
+                
                 if (!isDoubleFire)
                 {
                     FireAccordingToFireType();
@@ -66,7 +56,7 @@ namespace Player
                     for (var i = 0; i < 2; i++)
                     {
                         FireAccordingToFireType();
-
+                
                         yield return new WaitForSeconds(onDoubleFireWaitDuration);
                     }
                 }
@@ -75,80 +65,47 @@ namespace Player
 
         private void FireAccordingToFireType()
         {
-            switch (fireType)
+            if (isTripleAnglerFire)
             {
-                case FireType.Default:
+                foreach (var firePosition in firePositions)
+                {
                     var spawnBullet = PoolManager.GetPoolObject();
-                    spawnBullet.transform.position = firePositions[0].position;
+                    spawnBullet.transform.position = firePosition.position;
                     spawnBullet.gameObject.SetActive(true);
                     spawnBullet.AddForceToBullet(Vector3.forward, bulletSpeed);
-                    break;
-                case FireType.Triple:
-                    foreach (var firePosition in firePositions)
-                    {
-                        spawnBullet = PoolManager.GetPoolObject();
-                        spawnBullet.transform.position = firePosition.position;
-                        spawnBullet.gameObject.SetActive(true);
-                        spawnBullet.AddForceToBullet(Vector3.forward, bulletSpeed);
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                var spawnBullet = PoolManager.GetPoolObject();
+                spawnBullet.transform.position = firePositions[0].position;
+                spawnBullet.gameObject.SetActive(true);
+                spawnBullet.AddForceToBullet(Vector3.forward, bulletSpeed);
             }
         }
 
-        public void SetFireStatsOnPowerActive(PowerType powerType, float powerTypeAmount)
+        public void SetDoubleFire(bool value)
         {
-            switch (powerType)
-            {
-                case PowerType.TripleAngleFire:
-                    fireType = FireType.Triple;
-                    break;
-                case PowerType.DoubleFire:
-                    isDoubleFire = true;
-                    onDoubleFireWaitDuration = powerTypeAmount;
-                    break;
-                case PowerType.IncreaseFireRate:
-                    fireRate = powerTypeAmount;
-                    break;
-                case PowerType.BulletSpeed:
-                    bulletSpeed *= powerTypeAmount;
-                    break;
-                case PowerType.PlayerSpeed:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(powerType), powerType, null);
-            }
+            isDoubleFire = value;
         }
 
-        public void SetFireStatsOnPowerDeActive(PowerType powerType, float powerTypeAmount)
+        public void SetIsFireTripleFire(bool value)
         {
-            switch (powerType)
-            {
-                case PowerType.TripleAngleFire:
-                    fireType = defaultFireType;
-                    break;
-                case PowerType.DoubleFire:
-                    isDoubleFire = defaultIsDoubleFire;
-                    onDoubleFireWaitDuration = defaultOnDoubleFireWaitDuration;
-                    break;
-                case PowerType.IncreaseFireRate:
-                    fireRate = defaultFireRate;
-                    break;
-                case PowerType.BulletSpeed:
-                    bulletSpeed = defaultBulletSpeed;
-                    break;
-                case PowerType.PlayerSpeed:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(powerType), powerType, null);
-            }
+            isTripleAnglerFire = value;
+        }
+
+        public void SetFireRate(float rate)
+        {
+            fireRate = rate;
+        }
+
+        public void SetBulletSpeed(float speed)
+        {
+            bulletSpeed = speed;
         }
 
         private void SetStartStats()
         {
-            fireType = defaultFireType;
             fireRate = defaultFireRate;
             isDoubleFire = defaultIsDoubleFire;
             bulletSpeed = defaultBulletSpeed;

@@ -1,19 +1,33 @@
 using Events;
+using Player;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+namespace Controllers
 {
-    [Header("Events")] 
-    [SerializeField] private GameEvent onGameStart;
-    [SerializeField] private GameEvent onGameEnd;
-    
-    public void GameStart()
+    public class GameController : MonoBehaviour
     {
-        onGameStart.Raise();
-    }
+        public static GameController Instance;
+        
+        [Header("Events")] 
+        [SerializeField] private GameEvent onGameStart;
+        [SerializeField] private GameEvent onGameEnd;
 
-    public void GameEnd()
-    {
-        onGameEnd.Raise();
+        public FireController fireController;
+        public MovementController movementController;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        public void GameStart()
+        {
+            onGameStart.Raise();
+        }
+
+        public void GameEnd()
+        {
+            onGameEnd.Raise();
+        }
     }
 }

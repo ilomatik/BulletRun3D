@@ -84,20 +84,9 @@ namespace Player
 #endif
         }
 
-        public void SetForwardSpeedOnPowerActive(PowerType powerType, float newSpeed)
+        public void SetForwardSpeed(float newSpeed)
         {
-            if (powerType == PowerType.PlayerSpeed)
-            {
-                currentSpeed *= newSpeed;
-            }
-        }
-
-        public void SetForwardSpeedOnPowerDeActive(PowerType powerType, float newSpeed)
-        {
-            if (powerType == PowerType.PlayerSpeed)
-            {
-                currentSpeed = defaultForwardSpeed;
-            }
+            currentSpeed = newSpeed;
         }
 
         private void MoveForward()

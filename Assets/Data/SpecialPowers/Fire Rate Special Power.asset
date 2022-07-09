@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71197a43f1b430542b0176ba0c985a2b, type: 3}
-  m_Name: IncreaseFireRate
+  m_Script: {fileID: 11500000, guid: 7871e563a6794c379e5bd99662514e82, type: 3}
+  m_Name: Fire Rate Special Power
   m_EditorClassIdentifier: 
   onSpecialPowerActive: {fileID: 11400000, guid: c64c7160ae9f0fe4abe12800e22dd3d5, type: 2}
   onSpecialPowerDeActive: {fileID: 11400000, guid: c2bcbca0a144a78419f65930fd583db6, type: 2}
   description: Increase Fire Rate
-  powerType: 2
+  defaultAmount: 2
   amount: 1
-  inUse: 0
+  inUse: 1
